@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { createConnection } from 'typeorm';
 
+import { User } from './entities/User';
+
 const app = express();
 
 app.set('port', process.env.PORT || 80);
@@ -17,6 +19,7 @@ const main = async () => {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE_NAME,
+      entities: [User],
       synchronize: true,
       charset: 'UTF8_GENERAL_CI',
     });
