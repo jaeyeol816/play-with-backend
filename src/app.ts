@@ -2,9 +2,14 @@ import express, {Request, Response, NextFunction} from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import passport from 'passport';
 import { createConnection } from 'typeorm';
 
 import { User } from './entities/User';
+import passportConfig from './passport';
+
+import authRouter from './routes/auth';
+import v1Router from './routes/v1';
 
 const app = express();
 
@@ -30,12 +35,21 @@ const main = async () => {
     console.error(err);
   }
 
+  app.use(morgan(process.env.NODE_ENV || 'dev'));
+  
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+
+  app.use(passport.initialize());
+  passportConfig();
+
+  app.use('/auth', authRouter);
+  app.use('/v1', v1Router);
+
   app.get('/', (req: Request, res: Response) => {
     res.json({signal: 'success~!'});
   });   //test code
-
-  app.use(morgan(process.env.NODE_ENV || 'dev'));
-  app.use(express.json());
+  
   app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트에서 대기중 (컨테이너의 포트번호)');
   });
