@@ -3,11 +3,11 @@ import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-import { isNotLoggedIn } from './middlewares';
+import { isNotLoggedIn, verifyToken } from './middlewares';
 import { User } from '../entities';
-import { syncBuiltinESMExports } from 'module';
 
 const router = express.Router();
+
 
 router.post('/login', isNotLoggedIn, (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('local', { session: false }, (authError, user, info) => {
@@ -32,11 +32,18 @@ router.post('/login', isNotLoggedIn, (req: Request, res: Response, next: NextFun
       });
       return res.status(202).json({code: 202, user, token});
     }
-  })
+  })(req, res, next);
 });
+
 
 router.post('/join', isNotLoggedIn, async (req: Request, res: Response, next: NextFunction) => {
   const { email, nickname, password } = req.body;
+	if (!email || !nickname || !password) {
+		return res.status(409).json({
+			code: 409,
+			message: "Invalid Input",
+		});
+	}
   try {
     const exUser1 = await User.findOne({ select: ['id'], where: { email } });  //이미 가입된 이메일인지?
     if (exUser1) {
@@ -91,6 +98,14 @@ router.post('/join', isNotLoggedIn, async (req: Request, res: Response, next: Ne
     console.error(err);
     next(err);
   }
+});
+
+
+router.get('/logout', verifyToken, (req: Request, res: Response, next: NextFunction) => {
+	res.status(222).json({
+		code: 222,
+		message: "temp",
+	});
 });
 
 export default router;

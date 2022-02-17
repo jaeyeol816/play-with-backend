@@ -11,6 +11,4 @@ router.get('/test', verifyToken, (req: Request, res: Response) => {
 });
 
 
-
-
 export default router;

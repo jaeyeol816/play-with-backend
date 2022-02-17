@@ -13,7 +13,7 @@ export default () => {
     secretOrKey: process.env.JWT_SECRET,
   }, async (jwtPayload, done) => {
     try {
-      const exUser = await User.findOne({ where: {id: jwtPayload.id} });
+      const exUser = await User.findOne({ where: {id: jwtPayload.id } });
       if (exUser) 
         done(null, exUser as User);
       else 
@@ -22,7 +22,6 @@ export default () => {
     catch (err) {
       console.error(err);
     }
-    
   }));
 }
 
