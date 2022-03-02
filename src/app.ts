@@ -5,11 +5,11 @@ import morgan from 'morgan';
 import passport from 'passport';
 import { createConnection } from 'typeorm';
 
-import { User } from './entities/User';
 import passportConfig from './passport';
 
 import authRouter from './routes/auth';
 import v1Router from './routes/v1';
+import { User, ComComment, ComPost } from './entities';
 
 const app = express();
 
@@ -24,7 +24,7 @@ const main = async () => {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE_NAME,
-      entities: [User],
+      entities: [User, ComPost, ComComment],
       synchronize: true,
       charset: 'UTF8_GENERAL_CI',
     });

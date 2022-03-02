@@ -10,10 +10,18 @@ import {
   JoinTable,
 } from 'typeorm';
 
+import { ComPost, ComComment } from './index';
+
 export enum ProviderType {
   LOCAL = 'local',
   KAKAO = 'kakao',
   GOOGLE = 'google',
+}
+
+export enum GenderType {
+	MALE = 'male',
+	FEMALE = 'female',
+	UNKNOWN = 'unknown',
 }
 
 @Entity('users')
@@ -53,9 +61,50 @@ export class User extends BaseEntity {
   })
   point: number;
 
+	@Column({
+		unique: false,
+		nullable: false,
+		type: 'enum',
+		enum: GenderType,
+		default: GenderType.UNKNOWN,
+	})
+	gender: string;
+
+	@Column({
+		unique: false,
+		nullable: true,
+	})
+	birty_year: number;
+
+	@Column({
+		unique: false,
+		nullable: true,
+	})
+	birty_month: number;
+
+	@Column({
+		unique: false,
+		nullable: true,
+	})
+	birty_day: number;
+
+
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
+
+
+	@OneToMany(
+		() => ComPost,
+		com_posts => com_posts.user
+	)
+	com_posts: ComPost[];
+
+	@OneToMany(
+		() => ComComment,
+		com_comments => com_comments.user
+	)
+	com_comments: ComComment[];
 }
