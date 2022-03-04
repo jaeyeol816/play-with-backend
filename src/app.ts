@@ -9,6 +9,7 @@ import passportConfig from './passport';
 
 import authRouter from './routes/auth';
 import v1Router from './routes/v1';
+import communityRouter from './routes/community';
 import { User, ComComment, ComPost } from './entities';
 
 const app = express();
@@ -45,6 +46,7 @@ const main = async () => {
 
   app.use('/auth', authRouter);
   app.use('/v1', v1Router);
+	app.use('/community', communityRouter);
 
   app.get('/', (req: Request, res: Response) => {
     res.json({signal: 'success~!'});

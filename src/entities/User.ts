@@ -35,6 +35,12 @@ export class User extends BaseEntity {
   })
   nickname: string;
 
+	@Column({
+		unique: false,
+		nullable: false,
+	})
+	annonymous_nick: string;
+
   @Column({
     unique: true,
     nullable: false,

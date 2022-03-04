@@ -27,6 +27,12 @@ export class ComPost extends BaseEntity {
 
 	@Column({
 		unique: false,
+		nullable: false,
+	})
+	title: string;
+
+	@Column({
+		unique: false,
 		nullable: true,
 		type: "longtext",
 	})

@@ -61,12 +61,14 @@ router.post('/join', isNotLoggedIn, async (req: Request, res: Response, next: Ne
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
+		const hashedNickname = await bcrypt.hash(nickname, 3);
     
     //데이터베이스에 저장
     const user = new User();
     user.email = email;
     user.nickname = nickname;
     user.password = hashedPassword;
+		user.annonymous_nick = hashedNickname;
     const resultUser = await user.save();
 
     //방금 저장한거 다시 꺼내기. (기본키를 JWT토큰의 id라는 요소로 해서 토큰 생성할 것이기 때문에 기본키 필요)
