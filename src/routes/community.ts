@@ -51,4 +51,29 @@ router.post('/add', verifyToken, async (req: Request, res: Response, next: NextF
 	}
 });
 
+router.get('/mypost', verifyToken, async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const writerId = (req as any).decoded.id;
+
+		const posts = await ComPost.find({
+			where: { user: { id: writerId } },
+			order: { created_at: 'DESC'},
+			take: 5,
+			skip: 5 * (req.body.num - 1),
+		});
+
+		return res.json({
+			code: 205,
+			posts: posts,
+		})
+	}
+	catch (err) {
+		console.error(err);
+		res.status(423).json({
+			code: 423,
+			message: "Error!",
+		});
+	}
+});
+
 export default router;
