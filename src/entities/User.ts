@@ -11,18 +11,8 @@ import {
 } from 'typeorm';
 
 import { ComPost, ComComment } from './index';
+import { ProviderType, GenderType } from '../model';
 
-export enum ProviderType {
-  LOCAL = 'local',
-  KAKAO = 'kakao',
-  GOOGLE = 'google',
-}
-
-export enum GenderType {
-	MALE = 'male',
-	FEMALE = 'female',
-	UNKNOWN = 'unknown',
-}
 
 @Entity('users')
 export class User extends BaseEntity {

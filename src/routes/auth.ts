@@ -4,7 +4,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import { isNotLoggedIn, verifyToken } from './middlewares';
-import { User } from '../entities';
+import { DelUser, User } from '../entities';
+import { request } from 'http';
 
 const router = express.Router();
 
@@ -60,7 +61,7 @@ router.post('/join', isNotLoggedIn, async (req: Request, res: Response, next: Ne
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password as string, 12);
 		const hashedNickname = await bcrypt.hash(nickname, 3);
     
     //데이터베이스에 저장
@@ -109,5 +110,51 @@ router.get('/logout', verifyToken, (req: Request, res: Response, next: NextFunct
 		message: "temp",
 	});
 });
+
+
+router.delete('/disable', verifyToken, async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		//사용자가 입력하여 body로 보낸 비밀번호가 토큰의 사람의 비밀번호와 같은지 체크
+		const insideTokenId = (req as any).decoded.id;
+		const user = await User.findOne(insideTokenId) as User;
+		const result = await bcrypt.compare(req.body.password, user.password);
+		if (!result) {
+			return res.status(410).json({
+				code: 410,
+				message: "password not correct",
+			});
+		}
+
+		//DelUser의 테이블에 해당 유저 정보 저장
+		const delUser = new DelUser();
+		delUser.original_id = user.id;
+		delUser.nickname = user.nickname;
+		delUser.email = user.email;
+		delUser.password = user.password;
+		delUser.provider = user.provider;
+		delUser.point = user.point;
+		delUser.gender = user.gender;
+		delUser.annonymous_nick = user.annonymous_nick;
+		await delUser.save();
+
+		//User의 테이블에서 해당 유저 삭제
+		await User.delete(user.id);
+
+		//응답
+		res.status(205).json({
+			code: 205,
+			message: "deleting account success!",
+		});
+	}
+	catch (err) {
+		console.error(err);
+		return res.status(411).json({
+			code: 411,
+			message: "server error",
+		})
+	}
+});
+
+
 
 export default router;

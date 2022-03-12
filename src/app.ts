@@ -1,6 +1,4 @@
 import express, {Request, Response, NextFunction} from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import passport from 'passport';
 import { createConnection } from 'typeorm';
@@ -10,7 +8,7 @@ import passportConfig from './passport';
 import authRouter from './routes/auth';
 import v1Router from './routes/v1';
 import communityRouter from './routes/community';
-import { User, ComComment, ComPost } from './entities';
+import { User, ComComment, ComPost, DelUser, DelComPost } from './entities';
 
 const app = express();
 
@@ -25,7 +23,7 @@ const main = async () => {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE_NAME,
-      entities: [User, ComPost, ComComment],
+      entities: [User, ComPost, ComComment, DelUser, DelComPost],
       synchronize: true,
       charset: 'UTF8_GENERAL_CI',
     });

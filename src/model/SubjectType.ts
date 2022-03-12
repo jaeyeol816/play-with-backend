@@ -1,0 +1,17 @@
+export enum SubjectType {
+	NO_DEFINED = 1,
+	RUNNING = 2,
+	WEIGHT_TRAINING = 3,
+	SOCCER = 4,
+	BASKETBALL = 5,
+	BASEBALL = 6,
+	TENNIS = 7,
+	BADMINTON = 8,
+	HIKING = 9,
+	SWIMMING = 10,
+	TABLE_TENNIS = 11,
+	WALKING = 12,
+	MARTIAL_ARTS = 13,	//격투기
+	///추가..
+	ETC = 50,
+};

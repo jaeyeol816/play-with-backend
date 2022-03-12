@@ -13,6 +13,8 @@ import {
 } from 'typeorm';
 
 import { User, ComComment } from './index';
+import { SubjectType } from '../model';
+
 
 @Entity('com_posts') 
 export class ComPost extends BaseEntity {
@@ -45,6 +47,14 @@ export class ComPost extends BaseEntity {
 	})
 	views: number;
 
+	@Column({
+		unique: false,
+		nullable: false,
+		type: 'enum',
+		enum: SubjectType,
+		default: SubjectType.NO_DEFINED,
+	})
+	subject: number;
 
 	@CreateDateColumn()
 	created_at: Date;
