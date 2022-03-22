@@ -59,7 +59,12 @@ export class ComComment extends BaseEntity {
 	})
 	com_post: ComPost;
 
-	// @ManyToOne(() => ComComment, comComment => comComment.replied, { cascade: true })
+	//n:m이 아니라서 테이블 안만드는듯?
+	@ManyToOne(
+		() => ComComment, 
+		comComment => comComment.replied, 
+		{ cascade: true, onDelete: 'SET NULL' }
+	)
 	// @JoinTable({
 	// 	name: 'replys',
 	// 	joinColumn: {
@@ -69,8 +74,11 @@ export class ComComment extends BaseEntity {
 	// 		name: 'child_comment',
 	// 	}
 	// })
-	// replies: ComComment[];
+	@JoinColumn({
+		name: 'replies_id',
+	})
+	replies: ComComment;
 
-	// @OneToMany(() => ComComment, comComment => comComment.replies)
-	// replied: ComComment[];
+	@OneToMany(() => ComComment, comComment => comComment.replies)
+	replied: ComComment[];
 }

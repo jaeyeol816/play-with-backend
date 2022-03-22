@@ -231,6 +231,29 @@ router.post('/addcomment', verifyToken, async (req: Request, res: Response, next
 		comment.text = req.body.text;
 		comment.com_post = post;
 		comment.user = user;
+
+		if (req.body.parent_comment_id) {		//reply하는 댓글일 경우
+			const parentComment = await ComComment.findOne({
+				relations: ["replies"],
+				where: { id: req.body.parent_comment_id },
+			});
+			if (parentComment) {
+				if ((parentComment as ComComment).replies) {		//이미 reply하고 있는 댓글이 있는경우 -> 부모댓글이 이미 대댓글인경우
+					return res.status(439).json({
+						code: 439,
+						message: "cannot add reply on already replying comment",
+					});
+				}
+			}
+			else {
+				return res.status(438).json({
+					code: 438,
+					message: "parent comment doesn't exist"
+				});
+			}
+			comment.replies = parentComment;
+		}
+
 		const result = await comment.save();
 		return res.status(226).json({
 			code: 226,
@@ -239,6 +262,7 @@ router.post('/addcomment', verifyToken, async (req: Request, res: Response, next
 		});
 	}
 	catch (err) {
+		console.error(err);
 		return res.status(431).json({
 			code: 431,
 			message: "server error"
@@ -252,7 +276,7 @@ router.delete('/comment', verifyToken, async (req: Request, res: Response, next:
 		const commentId = req.body.comment_id;
 		const userId = (req as any).decoded.id;
 		const comment = await ComComment.findOne({
-			relations: ["user", "com_post"],
+			relations: ["user", "com_post", "replies"],
 			where: { id: commentId },
 		});
 		if (!comment) {		//해당 댓글이 없는 경우
@@ -275,6 +299,9 @@ router.delete('/comment', verifyToken, async (req: Request, res: Response, next:
 		delComment.original_post_id = comment.com_post.id;
 		delComment.text = comment.text;
 		delComment.image = comment.image;
+		if (comment.replies) {
+			delComment.replies_comment_id = comment.replies.id;
+		}
 		await delComment.save();
 
 		//ComComment에서 해당 댓글 삭제
@@ -356,6 +383,33 @@ router.patch('/changepost', verifyToken, async (req: Request, res: Response, nex
 		return res.status(437).json({
 			code: 437,
 			message: "server error"
+		});
+	}
+});
+
+
+router.get('/comment', async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const commentId: number = req.body.comment_id;
+		const comment = await ComComment.findOne({
+			where: { id: commentId },
+		});
+		if (!comment) {
+			return res.status(428).json({
+				code: 428,
+				message: "doesn't exist",
+			});
+		}
+		return res.status(229).json({
+			code: 229,
+			com_comment: comment
+		});
+	}
+	catch (err) {
+		console.error(err);
+		return res.status(429).json({
+			code: 429,
+			message: "server error",
 		});
 	}
 });

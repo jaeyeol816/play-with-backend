@@ -41,6 +41,12 @@ export class DelComComment extends BaseEntity {
 		unique: false,
 		nullable: true,
 	})
+	replies_comment_id: number;
+
+	@Column({
+		unique: false,
+		nullable: true,
+	})
 	text: string;
 
 	@Column({
