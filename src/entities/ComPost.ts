@@ -66,7 +66,7 @@ export class ComPost extends BaseEntity {
 	@ManyToOne(
 		() => User,
 		user => user.com_posts,
-		{ cascade: true }
+		{ cascade: true, onDelete: "SET NULL" }
 	)
 	@JoinColumn({
 		name: 'user_id',

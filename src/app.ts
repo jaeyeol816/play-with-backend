@@ -8,7 +8,7 @@ import passportConfig from './passport';
 import authRouter from './routes/auth';
 import v1Router from './routes/v1';
 import communityRouter from './routes/community';
-import { User, ComComment, ComPost, DelUser, DelComPost } from './entities';
+import { User, ComComment, ComPost, DelUser, DelComPost, DelComComment } from './entities';
 
 const app = express();
 
@@ -23,7 +23,7 @@ const main = async () => {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE_NAME,
-      entities: [User, ComPost, ComComment, DelUser, DelComPost],
+      entities: [User, ComPost, ComComment, DelUser, DelComPost, DelComComment],
       synchronize: true,
       charset: 'UTF8_GENERAL_CI',
     });

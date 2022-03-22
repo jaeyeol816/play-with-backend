@@ -114,6 +114,8 @@ router.get('/logout', verifyToken, (req: Request, res: Response, next: NextFunct
 
 router.delete('/disable', verifyToken, async (req: Request, res: Response, next: NextFunction) => {
 	try {
+		//추가해야 할 것: 유저를 delete할 경우 게시글을 어떻게 처리해야 할까 (게시글의 user_id를 null로 하는게 좋을듯. 이때 cascade대신 무엇을 사용해야할까)
+
 		//사용자가 입력하여 body로 보낸 비밀번호가 토큰의 사람의 비밀번호와 같은지 체크
 		const insideTokenId = (req as any).decoded.id;
 		const user = await User.findOne(insideTokenId) as User;

@@ -5,13 +5,17 @@ import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+	ManyToOne,
+	JoinColumn,
 } from 'typeorm';
 
-import { SubjectType } from '../model';
+import { ComComment } from './index';
 
-
-@Entity('del_com_posts')
-export class DelComPost extends BaseEntity {
+@Entity('del_com_comments')
+export class DelComComment extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
@@ -27,17 +31,15 @@ export class DelComPost extends BaseEntity {
 	})
 	original_user_id: number;
 
-
 	@Column({
 		unique: false,
-		nullable: true,
+		nullable: false,
 	})
-	image: string;
+	original_post_id: number;
 
 	@Column({
 		unique: false,
 		nullable: true,
-		type: 'longtext',
 	})
 	text: string;
 
@@ -45,22 +47,7 @@ export class DelComPost extends BaseEntity {
 		unique: false,
 		nullable: true,
 	})
-	views: number;
-
-	@Column({
-		unique: false,
-		nullable: true,
-	})
-	title: string;
-	
-	@Column({
-		unique: false,
-		nullable: true,
-		type: 'enum',
-		enum: SubjectType,
-		default: SubjectType.NO_DEFINED,
-	})
-	subject: number;
+	image: string;
 
 	@CreateDateColumn()
 	created_at: Date;
@@ -68,3 +55,4 @@ export class DelComPost extends BaseEntity {
 	@UpdateDateColumn()
 	updated_at: Date;
 }
+

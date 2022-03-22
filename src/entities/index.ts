@@ -6,4 +6,6 @@ export { ComComment } from './ComComment';
 
 export { DelUser } from './DelUser';
 
-export { DelComPost } from './DelComPost'
+export { DelComPost } from './DelComPost';
+
+export { DelComComment } from './DelComComment';
