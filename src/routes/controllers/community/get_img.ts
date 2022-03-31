@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import AWS from 'aws-sdk';
 
-import { ComPost } from "../../../entities";
-
 AWS.config.update({
 	accessKeyId: process.env.S3_ACCESS_KEY_ID,
 	secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
@@ -14,7 +12,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const img_str = req.body.img_str;
 		s3.getObject({
-			Bucket: 'play-with-bucket', Key: img_str
+			Bucket: process.env.S3_BUCKET_NAME as string,
+			Key: img_str
 		}, (err, data) => {
 			if (err) {
 				console.error(err);

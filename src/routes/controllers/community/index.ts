@@ -9,6 +9,7 @@ import delete_comment from "./delete_comment";
 import get_comment from "./get_comment";
 import post_addimg from "./post_addimg";
 import get_img from "./get_img";
+import { delete_img } from "./delete_img";
 
 
 export const communityController = {
@@ -23,4 +24,5 @@ export const communityController = {
 	get_comment, 
 	post_addimg,
 	get_img,
+	delete_img,
 }

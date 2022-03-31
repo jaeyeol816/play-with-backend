@@ -16,6 +16,10 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 		}
 		post.views++;
 		await post.save();
+
+		//이미지 관련
+		//...
+
 		res.status(200).json({
 			code: 200,
 			com_post: post

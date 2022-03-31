@@ -1,6 +1,7 @@
 import express, {Request, Response, NextFunction} from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
+import AWS from 'aws-sdk';
 import { createConnection } from 'typeorm';
 
 import passportConfig from './passport';
@@ -41,6 +42,12 @@ const main = async () => {
 
   app.use(passport.initialize());
   passportConfig();
+
+	AWS.config.update({
+		accessKeyId: process.env.S3_ACCESS_KEY_ID,
+		secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+		region: process.env.S3_REGION,
+	});
 
   app.use('/auth', authRouter);
   app.use('/v1', v1Router);
